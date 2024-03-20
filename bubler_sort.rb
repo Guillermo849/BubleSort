@@ -1,20 +1,28 @@
 # frozen_string_literal: true
 
 module ArrSort
-  def self.descending(arr)
-    loop do
+  def self.sort(arr)
+    unless check_sorted(arr)
       for i in 0..arr.length - 2 do
         next unless arr[i] > arr[i + 1]
 
         num = arr[i]
         arr[i] = arr[i + 1]
         arr[i + 1] = num
-        dishorder = true
       end
-      break unless dishorder
+      sort(arr)
     end
     arr
   end
+
+  def self.check_sorted(arr)
+    for i in 0..arr.length - 2 do
+      next unless arr[i] > arr[i + 1]
+
+      return false
+    end
+    true
+  end
 end
 
-print ArrSort.descending([2, 1, 20, 3, 4, 7, 3, 9, 0, -10])
+print ArrSort.sort([2, 1, 20, 3, 4, 7, 3, 9, 0, -10])
