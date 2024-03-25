@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative './validate_number'
-require_relative './bubble_sort'
+require_relative './validation'
+require_relative './sort_algorithm'
 
 class Runner
-  include ValidateNumber
+  include Validation
   def run
     arr = []
     answer = 'Y'
@@ -12,14 +12,15 @@ class Runner
       begin
         puts 'Insert a number'
         num = gets.chomp
-        validate(num)
+        raise NotIntegerError, 'The value is not an Integer' unless validate_integer(num)
+
         arr.push(num.to_i)
         puts 'Would you like to add another number?(Y/N)'
         answer = gets.chomp.upcase
-      rescue ValidateNumber::IS_NOT_NUMERIC => e
+      rescue NotIntegerError => e
         puts e.message
       end
     end
-    print BubbleSort.sort(arr)
+    print SortAlgorithm.bubble_sort(arr)
   end
 end
