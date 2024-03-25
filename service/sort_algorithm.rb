@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module BubbleSort
-  def self.sort(arr)
+module SortAlgorithm
+  def self.bubble_sort(arr)
     (0...arr.size).each do |num1|
       (0..arr.size - 1).each do |num2|
         next unless arr[num2] > arr[num1]
