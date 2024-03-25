@@ -1,3 +1,5 @@
-require_relative 'service/runner'
+# frozen_string_literal: true
+
+require './service/runner'
 
 Runner.new.run

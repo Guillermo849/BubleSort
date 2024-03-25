@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require './validate_number'
-require './bubble_sort'
+require_relative './validate_number'
+require_relative './bubble_sort'
 
 class Runner
   include ValidateNumber
