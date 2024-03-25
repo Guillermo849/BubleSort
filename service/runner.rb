@@ -21,6 +21,6 @@ class Runner
         puts e.message
       end
     end
-    print SortAlgorithm.bubble_sort(arr)
+    print SortAlgorithm.bundle_sort(arr)
   end
 end
