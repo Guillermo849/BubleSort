@@ -19,5 +19,3 @@ module ArrSort
     arr.each_cons(2).all? { |a| (a[0] <=> a[1]) <= 0 }
   end
 end
-
-print ArrSort.sort([2, 1, 20, 3, 4, 7, 3, 9, 0, -10])

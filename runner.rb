@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require './validate_number'
+require './bubler_sort'
 
 class Runner
   include ValidateNumber
@@ -19,6 +20,7 @@ class Runner
         puts e.message
       end
     end
+    print ArrSort.sort(arr)
   end
 end
 
