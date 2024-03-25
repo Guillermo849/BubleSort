@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ArrSort
+module BubbleSort
   def self.sort(arr)
     until check_sorted(arr)
       arr.each_with_index do |_number, index|
