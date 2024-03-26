@@ -5,6 +5,9 @@ require_relative './sort_algorithm'
 
 class Runner
   include Validation
+
+  NotIntegerError = Class.new(StandardError)
+
   def run
     arr = []
     answer = 'Y'
@@ -12,7 +15,7 @@ class Runner
       begin
         puts 'Insert a number'
         num = gets.chomp
-        raise NotIntegerError, 'The value is not an Integer' unless validate_integer(num)
+        raise NotIntegerError, 'The value is not an Integer' unless validate_input_char?(num)
 
         arr.push(num.to_i)
         puts 'Would you like to add another number?(Y/N)'
