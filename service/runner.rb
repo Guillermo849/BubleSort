@@ -2,6 +2,7 @@
 
 require_relative './validation'
 require_relative './sort_algorithm'
+require_relative './file_writer'
 
 class Runner
   include Validation
@@ -10,11 +11,13 @@ class Runner
   BadRangeError = Class.new(StandardError)
 
   def run
+    @time_of_execution = Time.now
     answer = 'Y'
     while answer == 'Y'
       begin
-        arr = generate_array
-        print "#{SortAlgorithm.bundle_sort(arr)} \n"
+        sort(generate_array)
+        puts "Time: #{@sorting_time}"
+        FileWrite.write_json(key: @time_of_execution, value: @sorting_time)
         puts 'Press Y to sort a new array'
         answer = gets.chomp.upcase
         @array_generation_option = nil
@@ -25,6 +28,13 @@ class Runner
   end
 
   private
+
+  def sort(arr)
+    starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    print "#{SortAlgorithm.bundle_sort(arr)} \n"
+    ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    @sorting_time = "Time: #{ending - starting}"
+  end
 
   def generate_array
     return automated_array if @array_generation_option
