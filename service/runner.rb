@@ -14,15 +14,15 @@ class Runner
     puts 'Generate Array automated or manually?(1/2)'
     if gets.chomp == '1'
       size = ask_input(question: 'Input the size of the Array')
-      start_num_of_range = ask_input(question: 'Input the first number for the range of numbers')
-      end_num_of_range = ask_input(question: 'Input the last number for the range of numbers')
+      start_of_range = ask_input(question: 'Input the first number for the range of numbers')
+      end_of_range = ask_input(question: 'Input the last number for the range of numbers')
 
-      if start_num_of_range > end_num_of_range
+      if start_of_range > end_of_range
         raise BadRangeError,
               'Bad range, start of range is bigger than the end of range'
       end
 
-      generate_array(size: size, start_num_of_range: start_num_of_range, end_num_of_range: end_num_of_range)
+      arr = generate_array(size: size, start_num_of_range: start_of_range, end_num_of_range: end_of_range)
     else
       answer = 'Y'
       while answer == 'Y'
@@ -61,9 +61,6 @@ class Runner
   end
 
   def generate_array(size:, start_num_of_range:, end_num_of_range:)
-    arr = []
-    (0...size).each { |i| arr[i] = rand(start_num_of_range..end_num_of_range) }
-
-    arr
+    Array.new(size) { rand(start_num_of_range..end_num_of_range) }
   end
 end
