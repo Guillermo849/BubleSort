@@ -13,8 +13,9 @@ class Runner
     answer = 'Y'
     while answer == 'Y'
       begin
-        print SortAlgorithm.bundle_sort(generate_array)
-        puts 'Would you like '
+        arr = generate_array
+        print "#{SortAlgorithm.bundle_sort(arr)} \n"
+        puts 'Press Y to sort a new array'
         answer = gets.chomp.upcase
         @array_generation_option = nil
       rescue BadRangeError, NotIntegerError => e
@@ -34,22 +35,22 @@ class Runner
     return automated_array if gets.chomp == 'A'
 
     @array_generation_option = false
+    @arr_status = []
     manually_array
   end
 
   def manually_array
-    arr = []
     answer = 'Y'
     while answer == 'Y'
       puts 'Insert a number'
       num = gets.chomp
       raise NotIntegerError, 'The value is not an Integer' unless validate_input_char?(num)
 
-      arr.push(num.to_i)
+      @arr_status.push(num.to_i)
       puts 'Would you like to add another number?(Y/N)'
       answer = gets.chomp.upcase
     end
-    arr
+    @arr_status
   end
 
   def automated_array
