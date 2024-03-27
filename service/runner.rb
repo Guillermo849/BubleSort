@@ -7,6 +7,7 @@ class Runner
   include Validation
 
   NotIntegerError = Class.new(StandardError)
+  BadRangeError = Class.new(StandardError)
 
   def run
     arr = []
@@ -16,11 +17,12 @@ class Runner
       start_num_of_range = ask_input(question: 'Input the first number for the range of numbers')
       end_num_of_range = ask_input(question: 'Input the last number for the range of numbers')
 
-      arr = if num1 < num2
-              generate_array(size: size, start_num_of_range: num1, end_num_of_range: num2)
-            else
-              generate_array(size: size, start_num_of_range: num2, end_num_of_range: num1)
-            end
+      if start_num_of_range > end_num_of_range
+        raise BadRangeError,
+              'Bad range, start of range is bigger than the end of range'
+      end
+
+      generate_array(size: size, start_num_of_range: start_num_of_range, end_num_of_range: end_num_of_range)
     else
       answer = 'Y'
       while answer == 'Y'
@@ -60,7 +62,7 @@ class Runner
 
   def generate_array(size:, start_num_of_range:, end_num_of_range:)
     arr = []
-    (0...size).each { |i| arr[i] = rand(small_number..big_number) }
+    (0...size).each { |i| arr[i] = rand(start_num_of_range..end_num_of_range) }
 
     arr
   end
