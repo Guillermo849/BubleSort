@@ -2,7 +2,6 @@
 
 require_relative './validation'
 require_relative './sort_algorithm'
-require_relative './generate_object'
 
 class Runner
   include Validation
@@ -14,13 +13,13 @@ class Runner
     puts 'Generate Array automated or manually?(1/2)'
     if gets.chomp == '1'
       size = ask_input(question: 'Input the size of the Array')
-      num1 = ask_input(question: 'Input a number for the range of numbers')
-      num2 = ask_input(question: 'Input a second number for the range of numbers')
+      start_num_of_range = ask_input(question: 'Input the first number for the range of numbers')
+      end_num_of_range = ask_input(question: 'Input the last number for the range of numbers')
 
       arr = if num1 < num2
-              GenerateObject.generate_array(size: size, small_number: num1, big_number: num2)
+              generate_array(size: size, start_num_of_range: num1, end_num_of_range: num2)
             else
-              GenerateObject.generate_array(size: size, small_number: num2, big_number: num1)
+              generate_array(size: size, start_num_of_range: num2, end_num_of_range: num1)
             end
     else
       answer = 'Y'
@@ -57,5 +56,12 @@ class Runner
       end
     end
     num.to_i
+  end
+
+  def generate_array(size:, start_num_of_range:, end_num_of_range:)
+    arr = []
+    (0...size).each { |i| arr[i] = rand(small_number..big_number) }
+
+    arr
   end
 end
