@@ -2,6 +2,7 @@
 
 module SortAlgorithm
   def self.bundle_sort(arr)
+    starting = Time.now
     (0...arr.size).each do |num1|
       (0..arr.size - 1).each do |num2|
         next unless arr[num2] > arr[num1]
@@ -11,6 +12,8 @@ module SortAlgorithm
         arr[num2] = num
       end
     end
+    ending = Time.now
+    puts "Time: #{ending - starting}"
     arr
   end
 end
