@@ -13,7 +13,6 @@ class Runner
   BadSizeError = Class.new(Error)
 
   def run
-    @time_of_execution = Time.now
     answer = 'Y'
     @arr_status = []
     while answer == 'Y'
@@ -104,7 +103,7 @@ class Runner
     file = File.read('sorting_time.json')
     information.merge!(JSON.parse(file))
     File.open('sorting_time.json', 'w') do |fw|
-      fw.write(JSON.dump(information))
+      fw.write(JSON.pretty_generate(information))
       fw.close
     end
   end
