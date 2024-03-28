@@ -2,7 +2,6 @@
 
 require_relative './validation'
 require_relative './sort_algorithm'
-require_relative './file_writer'
 require 'json'
 
 class Runner
@@ -21,7 +20,7 @@ class Runner
       begin
         sort_arr_calculate_time(generate_array)
         puts "Time: #{@sorting_time}"
-        FileWrite.json(key: @time_of_execution, value: @sorting_time)
+        write_json(information: { Time.now => @sorting_time })
         puts 'Press Y to sort a new array'
         answer = gets.chomp.upcase
         @array_generation_option = nil
@@ -38,7 +37,7 @@ class Runner
     starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     print "#{SortAlgorithm.bundle_sort(arr)} \n"
     ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    @sorting_time = "Time: #{ending - starting}"
+    @sorting_time = "Time: #{(ending - starting).round(7)}"
   end
 
   def generate_array
@@ -47,7 +46,7 @@ class Runner
 
     @array_generation_option = true
     puts 'Type A for automated array generation or any key for manually?'
-    return automated_array if gets.chomp == 'A'
+    return automated_array if gets.chomp.upcase == 'A'
 
     @array_generation_option = false
     manually_array
@@ -102,9 +101,11 @@ class Runner
 
   # File Operations
   def write_json(information:)
-    File.open('sorting_time.json', 'r') do |f|
-      f.write(JSON.pretty_generate(information))
-      f.close
+    file = File.read('sorting_time.json')
+    information.merge!(JSON.parse(file))
+    File.open('sorting_time.json', 'w') do |fw|
+      fw.write(JSON.dump(information))
+      fw.close
     end
   end
 end
