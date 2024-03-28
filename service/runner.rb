@@ -17,7 +17,7 @@ class Runner
       begin
         sort(generate_array)
         puts "Time: #{@sorting_time}"
-        FileWrite.write_json(key: @time_of_execution, value: @sorting_time)
+        FileWrite.json(key: @time_of_execution, value: @sorting_time)
         puts 'Press Y to sort a new array'
         answer = gets.chomp.upcase
         @array_generation_option = nil
