@@ -8,8 +8,10 @@ require 'json'
 class Runner
   include Validation
 
-  NotIntegerError = Class.new(StandardError)
-  BadRangeError = Class.new(StandardError)
+  Error = Class.new(StandardError)
+  NotIntegerError = Class.new(Error)
+  BadRangeError = Class.new(Error)
+  BadSizeError = Class.new(Error)
 
   def run
     @time_of_execution = Time.now
@@ -24,7 +26,7 @@ class Runner
         answer = gets.chomp.upcase
         @array_generation_option = nil
         @arr_status = []
-      rescue BadRangeError, NotIntegerError => e
+      rescue Error => e
         puts e.message
       end
     end
@@ -68,6 +70,8 @@ class Runner
 
   def automated_array
     size = ask_input_integer_number(text: 'Input the size of the Array')
+    raise BadSizeError, "Size of arrray can't be lower than 1" if size < 1
+
     start_of_range = ask_input_integer_number(text: 'Input the first number for the range of numbers')
     end_of_range = ask_input_integer_number(text: 'Input the last number for the range of numbers')
 
@@ -98,7 +102,7 @@ class Runner
 
   # File Operations
   def write_json(information:)
-    File.open('sorting_time.json', 'w') do |f|
+    File.open('sorting_time.json', 'r') do |f|
       f.write(JSON.pretty_generate(information))
       f.close
     end
