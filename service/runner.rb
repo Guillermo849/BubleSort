@@ -3,6 +3,7 @@
 require_relative './validation'
 require_relative './sort_algorithm'
 require_relative './file_writer'
+require 'json'
 
 class Runner
   include Validation
@@ -13,14 +14,16 @@ class Runner
   def run
     @time_of_execution = Time.now
     answer = 'Y'
+    @arr_status = []
     while answer == 'Y'
       begin
-        sort(generate_array)
+        sort_arr_calculate_time(generate_array)
         puts "Time: #{@sorting_time}"
         FileWrite.json(key: @time_of_execution, value: @sorting_time)
         puts 'Press Y to sort a new array'
         answer = gets.chomp.upcase
         @array_generation_option = nil
+        @arr_status = []
       rescue BadRangeError, NotIntegerError => e
         puts e.message
       end
@@ -29,7 +32,7 @@ class Runner
 
   private
 
-  def sort(arr)
+  def sort_arr_calculate_time(arr)
     starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     print "#{SortAlgorithm.bundle_sort(arr)} \n"
     ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -45,10 +48,10 @@ class Runner
     return automated_array if gets.chomp == 'A'
 
     @array_generation_option = false
-    @arr_status = []
     manually_array
   end
 
+  # Different ways to generate the arrays
   def manually_array
     answer = 'Y'
     while answer == 'Y'
@@ -76,6 +79,7 @@ class Runner
     Array.new(size) { rand(start_of_range..end_of_range) }
   end
 
+  # User integer input
   def ask_input_integer_number(text:)
     values_correct = false
     until values_correct
@@ -90,5 +94,13 @@ class Runner
       end
     end
     num.to_i
+  end
+
+  # File Operations
+  def write_json(information:)
+    File.open('sorting_time.json', 'w') do |f|
+      f.write(JSON.pretty_generate(information))
+      f.close
+    end
   end
 end
