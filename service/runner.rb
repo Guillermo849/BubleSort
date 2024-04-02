@@ -17,9 +17,16 @@ class Runner
     @arr_status = []
     while answer == 'Y'
       begin
-        sort_arr_calculate_time(generate_array)
-        puts @sorting_time
-        write_json(information: { Time.now => @sorting_time })
+        arr = generate_array
+        # Calcultes the time it takes to sort the array
+        starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        print "#{SortAlgorithm.bundle_sort(arr)} \n"
+        ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        sorting_time = "Time: #{format('%f', (ending - starting).round(5))}"
+        puts sorting_time
+        # Writes onto the json file
+        write_json(information: { Time.now => sorting_time })
+        # Reads the json file
         puts 'Press Y to read the Json file'
         read_json if gets.chomp.upcase == 'Y'
         puts 'Press Y to sort a new array'
@@ -33,13 +40,6 @@ class Runner
   end
 
   private
-
-  def sort_arr_calculate_time(arr)
-    starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    print "#{SortAlgorithm.bundle_sort(arr)} \n"
-    ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    @sorting_time = "Time: #{format('%f', (ending - starting).round(5))}"
-  end
 
   def generate_array
     return automated_array if @array_generation_option
