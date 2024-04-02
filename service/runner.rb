@@ -2,10 +2,12 @@
 
 require_relative './validation'
 require_relative './sort_algorithm'
+require_relative './file_operations'
 require 'json'
 
 class Runner
   include Validation
+  include FileOperations
 
   Error = Class.new(StandardError)
   NotIntegerError = Class.new(Error)
@@ -33,7 +35,7 @@ class Runner
         answer = gets.chomp.upcase
         @array_generation_option = nil
         @arr_status = []
-      rescue Error => e
+      rescue Error, FileNotFoundError => e
         puts e.message
       end
     end
@@ -98,24 +100,5 @@ class Runner
       end
     end
     num.to_i
-  end
-
-  # File Operations
-  def write_json(information:)
-    file = File.read('sorting_time.json')
-    information.merge!(JSON.parse(file))
-    File.open('sorting_time.json', 'w') do |fw|
-      fw.write(JSON.pretty_generate(information))
-      fw.close
-    end
-  end
-
-  def read_json
-    file = File.read('sorting_time.json')
-    puts '------------------------------------------------'
-    JSON.parse(file).each do |key, value|
-      puts "#{key} - #{value}"
-    end
-    puts "'------------------------------------------------ \n"
   end
 end
