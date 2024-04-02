@@ -24,7 +24,7 @@ class Runner
         starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         print "#{SortAlgorithm.bundle_sort(arr)} \n"
         ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        sorting_time = "Time: #{format('%f', (ending - starting).round(5))}"
+        sorting_time = "Time: #{format('%f', (ending - starting).round(ROUND_TIME_NUMBER))}"
         puts sorting_time
         # Writes onto the json file
         write_json(information: { Time.now => sorting_time })
@@ -42,6 +42,9 @@ class Runner
   end
 
   private
+
+  ROUND_TIME_NUMBER = 5
+  MIN_ARR_SIZE_NUMBER = 1
 
   def generate_array
     return automated_array if @array_generation_option
@@ -72,7 +75,7 @@ class Runner
 
   def automated_array
     size = ask_input_integer_number(text: 'Input the size of the Array')
-    raise BadSizeError, "Size of arrray can't be lower than 1" if size < 1
+    raise BadSizeError, "Size of arrray can't be lower than #{MIN_ARR_SIZE_NUMBER}" if size < MIN_ARR_SIZE_NUMBER
 
     start_of_range = ask_input_integer_number(text: 'Input the first number for the range of numbers')
     end_of_range = ask_input_integer_number(text: 'Input the last number for the range of numbers')
