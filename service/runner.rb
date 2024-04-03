@@ -2,22 +2,40 @@
 
 require_relative './validation'
 require_relative './sort_algorithm'
+require_relative './file_operations'
+require 'json'
 
 class Runner
   include Validation
+  include FileOperations
 
-  NotIntegerError = Class.new(StandardError)
-  BadRangeError = Class.new(StandardError)
+  Error = Class.new(StandardError)
+  NotIntegerError = Class.new(Error)
+  BadRangeError = Class.new(Error)
+  BadSizeError = Class.new(Error)
 
   def run
     answer = 'Y'
+    @arr_status = []
     while answer == 'Y'
       begin
-        print SortAlgorithm.bundle_sort(generate_array)
-        puts 'Would you like '
+        arr = generate_array
+        # Calcultes the time it takes to sort the array
+        starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        print "#{SortAlgorithm.bundle_sort(arr)} \n"
+        ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        sorting_time = "Time: #{format('%f', (ending - starting).round(ROUND_TIME_NUMBER))}"
+        puts sorting_time
+        # Writes onto the json file
+        write_json(information: { Time.now => sorting_time })
+        # Reads the json file
+        puts 'Press Y to read the Json file'
+        read_json if gets.chomp.upcase == 'Y'
+        puts 'Press Y to sort a new array'
         answer = gets.chomp.upcase
         @array_generation_option = nil
-      rescue BadRangeError, NotIntegerError => e
+        @arr_status = []
+      rescue Error, FileNotFoundError => e
         puts e.message
       end
     end
@@ -25,35 +43,40 @@ class Runner
 
   private
 
+  ROUND_TIME_NUMBER = 5
+  MIN_ARR_SIZE_NUMBER = 1
+
   def generate_array
     return automated_array if @array_generation_option
     return manually_array if @array_generation_option == false
 
     @array_generation_option = true
     puts 'Type A for automated array generation or any key for manually?'
-    return automated_array if gets.chomp == 'A'
+    return automated_array if gets.chomp.upcase == 'A'
 
     @array_generation_option = false
     manually_array
   end
 
+  # Different ways to generate the arrays
   def manually_array
-    arr = []
     answer = 'Y'
     while answer == 'Y'
       puts 'Insert a number'
       num = gets.chomp
       raise NotIntegerError, 'The value is not an Integer' unless validate_input_char?(num)
 
-      arr.push(num.to_i)
+      @arr_status.push(num.to_i)
       puts 'Would you like to add another number?(Y/N)'
       answer = gets.chomp.upcase
     end
-    arr
+    @arr_status
   end
 
   def automated_array
     size = ask_input_integer_number(text: 'Input the size of the Array')
+    raise BadSizeError, "Size of arrray can't be lower than #{MIN_ARR_SIZE_NUMBER}" if size < MIN_ARR_SIZE_NUMBER
+
     start_of_range = ask_input_integer_number(text: 'Input the first number for the range of numbers')
     end_of_range = ask_input_integer_number(text: 'Input the last number for the range of numbers')
 
@@ -65,6 +88,7 @@ class Runner
     Array.new(size) { rand(start_of_range..end_of_range) }
   end
 
+  # User integer input
   def ask_input_integer_number(text:)
     values_correct = false
     until values_correct
