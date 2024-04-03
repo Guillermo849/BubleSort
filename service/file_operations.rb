@@ -21,7 +21,10 @@ module FileOperations
     file = File.read(FILE_NAME)
     puts '------------------------------------------------'
     JSON.parse(file).each do |key, value|
-      puts "#{key} - #{value}"
+      puts key
+      value.each do |val_key, val_value|
+        puts "\t #{val_key} - #{val_value}"
+      end
     end
     puts "------------------------------------------------ \n"
   end
