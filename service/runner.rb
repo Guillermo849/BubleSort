@@ -20,15 +20,29 @@ class Runner
     while answer == 'Y'
       begin
         arr = generate_array
-        # Calcultes the time it takes to sort the array
+
         starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        print "#{SortAlgorithm.bundle_sort(arr)} \n"
+        puts SortAlgorithm.bundle_sort(arr)
         ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        sorting_time = "Time: #{format('%f', (ending - starting).round(ROUND_TIME_NUMBER))}"
-        puts sorting_time
-        # Writes onto the json file
-        write_json(information: { Time.now => sorting_time })
-        # Reads the json file
+
+        buble_sorting_time = format('%f', (ending - starting).round(ROUND_TIME_NUMBER))
+        puts "Time: #{buble_sorting_time}"
+
+        starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        puts arr.sort
+        ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+        quick_sorting_time = format('%f', (ending - starting).round(ROUND_TIME_NUMBER))
+        puts "Time: #{quick_sorting_time}"
+
+        time_info = { Time.now => {
+          time_for_qs: quick_sorting_time,
+          time_for_bs: buble_sorting_time,
+          element_count: arr.size
+        } }
+
+        write_json(information: time_info)
+
         puts 'Press Y to read the Json file'
         read_json if gets.chomp.upcase == 'Y'
         puts 'Press Y to sort a new array'
